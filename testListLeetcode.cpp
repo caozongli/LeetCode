@@ -159,6 +159,106 @@ int pathSum(TreeNode* root, int targetSum) {
 
 
 
+static vector<TreeNode *> res;
+static unordered_set<int> hashMy;
+
+void delNode(TreeNode *root)
+{
+	if(!root) return;
+	if(hashMy.count(root->val)) 
+	{
+		if(root->left)
+		{ 
+			if(!hashMy.count(root->left->val)) 
+			{
+				res.push_back(root->left);delNode(root->left);
+			}
+			else 
+			{
+				delNode(root->left);
+				root->left = nullptr;
+			} 
+		}
+		if(root->right)
+		{
+			
+			if(hashMy.count(root->left->val))
+			{
+				res.push_back(root->right);delNode(root->right);
+			} 
+			else 
+			{
+				delNode(root->right);
+				root->right = nullptr;
+			}
+		}
+	}
+	else
+	{
+		if(root->left)
+		{
+			delNode(root->left);
+			if(hashMy.count(root->left->val)) root->left = nullptr;
+		}
+		if(root->right)
+		{
+			delNode(root->right);
+			if(hashMy.count(root->right->val)) root->right = nullptr;
+		}
+	}
+}
+
+
+vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) {
+	if(!root) return {};
+	for(int i=0; i<to_delete.size(); i++)
+		hashMy.emplace(to_delete[i]);
+	if(hashMy.count(root->val)) 
+	{
+		if(root->left)
+		{ 
+			if(!hashMy.count(root->left->val)) 
+			{
+				res.push_back(root->left);delNode(root->left);
+			}
+			else 
+			{
+				delNode(root->left);
+				root->left = nullptr;
+			} 
+		}
+		if(root->right)
+		{
+			
+			if(hashMy.count(root->left->val))
+			{
+				res.push_back(root->right);delNode(root->right);
+			} 
+			else 
+			{
+				delNode(root->right);
+				root->right = nullptr;
+			}
+		}
+	}
+	else
+	{
+		res.push_back(root);
+		if(root->left)
+		{
+			delNode(root->left);
+			if(hashMy.count(root->left->val)) root->left = nullptr;
+		}
+		if(root->right)
+		{
+			delNode(root->right);
+			if(hashMy.count(root->right->val)) root->right = nullptr;
+		}
+	}
+	return res;
+}
+    
+
 int main()
 {
 	// ListNode *p = new ListNode(-1);
@@ -169,10 +269,11 @@ int main()
 
 	// sortList(p);
 
-	vector<int> a{5,4,8,11,INT32_MAX,13,4,7,2,INT32_MAX,INT32_MAX,5,1};
+	vector<int> a{1,2,3,4,5,6,7};
+	vector<int> aa{3,5};
 	TreeNode * p = create(a);
-	pathSum(p, 22);
-
+	delNodes(p, aa);
+	
 	system("pause");
 	return 0;
 }
