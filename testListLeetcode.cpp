@@ -4,6 +4,7 @@
 #include <vector>
 #include <stack>
 #include <queue>
+#include <algorithm>
 
 using namespace std;
 struct ListNode {
@@ -259,6 +260,46 @@ vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) {
 }
     
 
+TreeNode* createTree(vector<int>& preorder, int pl, int pr, vector<int>& inorder, int ol, int rr)
+{
+	if(pl>pr) return nullptr;
+	if(pl==pr)
+	{
+		TreeNode *root = new TreeNode(preorder[pl]);
+		return root;
+	}
+	int mid;
+	for(int i=ol; i<=rr; i++)
+	{
+		if(preorder[pl]==inorder[i])
+		{
+			mid = i;
+			break;
+		}
+	}
+	TreeNode *root = new TreeNode(preorder[pl]);
+	root->left = createTree(preorder, pl+1, mid, inorder, ol, mid-1);
+	root->right = createTree(preorder, mid+1, pr, inorder, mid+1, rr);
+	return root;
+}
+
+TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+	int n = inorder.size();
+	int mid;
+	for(int i=0; i<n; i++)
+	{
+		if(inorder[i]==preorder[0]) 
+		{
+			mid = i;
+			break;
+		}
+	}
+	TreeNode *root = new TreeNode(inorder[mid]);
+	root->left = createTree(preorder, 1, mid, inorder, 0, mid-1);
+	root->right = createTree(preorder, mid+1, n-1, inorder, mid+1, n-1); 
+	return root;
+}
+
 int main()
 {
 	// ListNode *p = new ListNode(-1);
@@ -269,11 +310,11 @@ int main()
 
 	// sortList(p);
 
-	vector<int> a{1,2,3,4,5,6,7};
-	vector<int> aa{3,5};
-	TreeNode * p = create(a);
-	delNodes(p, aa);
-	
+	unordered_map<int, int> hash;
+	hash.emplace(2, 0);
+	int a = 0;
+	if(hash.count(2))  a = 1;
+
 	system("pause");
 	return 0;
 }
