@@ -5,6 +5,8 @@
 #include <stack>
 #include <queue>
 #include <algorithm>
+#include <list>
+#include <time.h>
 
 using namespace std;
 struct ListNode {
@@ -310,11 +312,7 @@ int main()
 
 	// sortList(p);
 
-	unordered_map<int, int> hash;
-	hash.emplace(2, 0);
-	int a = 0;
-	if(hash.count(2))  a = 1;
-
+	
 	system("pause");
 	return 0;
 }
